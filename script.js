@@ -3,9 +3,14 @@ $("#name").focus();
 $("#other-title").hide();
 $("#colors-js-puns").hide();
 
+
+
 $('#title').change(function(){
 	if($('#title option:selected').html() === 'Other'){
 		$('#other-title').show();
+	}
+	else{
+		$('#other-title').hide();
 	}
 })
 
@@ -43,3 +48,77 @@ $("#design").change(function(e){
 	}
 	
 })
+
+let total = 0;
+const $checkboxes = $(".activities input");
+$(".activities").append('<p id="totalCost"></p>');
+$("#totalCost").hide();
+let boxesChecked =0;
+$checkboxes.change(function(e){
+	disableElements();
+	if($(this).prop("checked")){
+		let dataCost = parseInt(($(this).attr("data-cost")).replace("$", ""));
+		total+=dataCost;
+		boxesChecked++;
+	}
+	else if(!($(this).prop("checked"))){
+		let dataCost = parseInt(($(this).attr("data-cost")).replace("$", ""));
+		total -=dataCost;
+		boxesChecked--;
+	}
+	if($(this).prop("checked") && $("#totalCost")){
+		$("#totalCost").show();
+	}
+	if(boxesChecked === 0){
+		$("#totalCost").hide();
+	}
+	$("#totalCost").text("Total: $" + total);	
+})
+
+function disableElements(){
+	const jsFrameworks = $('[name = "js-frameworks"]');
+	const express = $('[name = "express"]');
+	const jsLibs = $('[name = "js-libs"]');
+	const node = $('[name = "node"]');
+	if(jsFrameworks.prop("checked")){
+		express.attr("disabled", true);
+		express.parent().css("color", "gray");
+
+	}
+	else{
+		express.attr("disabled", false);
+		express.parent().css("color", "black");
+	}
+	if(express.prop("checked")){
+		jsFrameworks.attr("disabled", true);
+		jsFrameworks.parent().css("color", "gray");
+
+	}
+	else{
+		jsFrameworks.attr("disabled", false);
+		jsFrameworks.parent().css("color", "black");
+	}
+	if(jsLibs.prop("checked")){
+		node.attr("disabled", true);
+		node.parent().css("color", "gray");
+
+	}
+	else{
+		node.attr("disabled", false);
+		node.parent().css("color", "black");
+	}
+	if(node.prop("checked")){
+		jsLibs.attr("disabled", true);
+		jsLibs.parent().css("color", "gray");
+
+	}
+	else{
+		jsLibs.attr("disabled", false);
+		jsLibs.parent().css("color", "black");
+	}
+
+
+}
+
+
+
