@@ -116,9 +116,35 @@ function disableElements(){
 		jsLibs.attr("disabled", false);
 		jsLibs.parent().css("color", "black");
 	}
-
-
 }
+const creditCard = $("#credit-card");
+const paypal = $("#credit-card").next();
+const bitcoin = paypal.next();
+paypal.hide();
+bitcoin.hide();
+$("#payment").change(function(){
+	if($('#payment option:selected').text() === "Credit Card"){
+		creditCard.show();
+		paypal.hide();
+		bitcoin.hide();
+	}
+	else if($('#payment option:selected').text() === "PayPal"){
+		paypal.show();
+		bitcoin.hide();
+		creditCard.hide();
+	}
+	else if($('#payment option:selected').text() === "Bitcoin"){
+		bitcoin.show();
+		paypal.hide();
+		creditCard.hide();
+	}
+	else{
+		creditCard.show();
+		paypal.hide();
+		bitcoin.hide();
+	}
+
+})
 
 
 
