@@ -51,6 +51,8 @@ $("#design").change(function(e){
 
 let total = 0;
 const $checkboxes = $(".activities input");
+$(".activities legend").after('<label id="actRequired" class="required">Select at least one activity </label>');
+$("#actRequired").hide();
 $(".activities").append('<p id="totalCost"></p>');
 $("#totalCost").hide();
 let boxesChecked =0;
@@ -58,6 +60,7 @@ $checkboxes.change(function(e){
 	disableElements();
 	if($(this).prop("checked")){
 		let dataCost = parseInt(($(this).attr("data-cost")).replace("$", ""));
+		$("#actRequired").hide();
 		total+=dataCost;
 		boxesChecked++;
 	}
@@ -71,6 +74,7 @@ $checkboxes.change(function(e){
 	}
 	if(boxesChecked === 0){
 		$("#totalCost").hide();
+		$("#actRequired").show();
 	}
 	$("#totalCost").text("Total: $" + total);	
 })
@@ -122,6 +126,7 @@ const paypal = $("#credit-card").next();
 const bitcoin = paypal.next();
 paypal.hide();
 bitcoin.hide();
+$('#payment option[value="select method"]').hide();
 $("#payment").change(function(){
 	if($('#payment option:selected').text() === "Credit Card"){
 		creditCard.show();
@@ -146,5 +151,125 @@ $("#payment").change(function(){
 
 })
 
+//form validation:
+function fieldRequired(inputId, labelId, val, func){
+	if(!func(val)){
+		inputId.css("border", "1px solid red");
+		labelId.show();
+	}else{
+		inputId.css("border", "2px solid #6F9DDC");
+		labelId.hide();
+	}
+}
 
+//name validation
+function isNameValid(name){
+	return /^[a-z\s]*$/i.test(name);
+} 
+
+$("#name").prev().after('<label id="nameRequired" class="required">Name is required. Only letters.</label>');
+const nameRequired = $("#nameRequired");
+nameRequired.hide();
+
+$("#name").on("input", function(){
+	fieldRequired($("#name"), $("#nameRequired"),$(this).val(), isNameValid);
+});
+
+//email validation
+function isEmailValid(email){
+	return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
+} 
+
+$("#mail").prev().after('<label id="emailRequired" class="required">Email required. Email must follow the example: lola@example.com</label>');
+const emailRequired = $("#emailRequired");
+emailRequired.hide();
+
+$("#mail").on("input", function(){
+	fieldRequired($("#mail"), $("#emailRequired"),$(this).val(), isEmailValid);
+});
+
+//credit card number validation
+function isCCValid(cc){
+	return /^\d{13}\d?\d?\d?$/.test(cc);
+} 
+$("#cc-num").after('<label id="ccRequired" class="required">Credit card required.</label>');
+const ccRequired = $("#ccRequired");
+ccRequired.hide();
+
+$("#cc-num").on("input", function(){
+	fieldRequired($("#cc-num"), $("#ccRequired"),$(this).val(), isCCValid);
+});
+
+//zip code validation
+function isZipValid(zip){
+	return /^\d{5}$/.test(zip);
+} 
+$("#zip").after('<label id="zipRequired" class="required">Zip code required.</label>');
+const zipRequired = $("#zipRequired");
+zipRequired.hide();
+
+$("#zip").on("input", function(){
+	fieldRequired($("#zip"), $("#zipRequired"),$(this).val(), isZipValid);
+});
+
+//cvv validation
+function isCvvValid(zip){
+	return /^\d{3}$/.test(zip);
+} 
+$("#cvv").after('<label id="cvvRequired" class="required">CVV Required.</label>');
+const cvvRequired = $("#cvvRequired");
+cvvRequired.hide();
+
+$("#cvv").on("input", function(){
+	fieldRequired($("#cvv"), $("#cvvRequired"),$(this).val(), isCvvValid);
+});
+
+function checkFields(){
+	let checkedActivities = 0;
+	$(".activities input").each(function(){
+		if($(this).prop("checked")){
+			checkedActivities++;
+		}
+		else{
+			checkedActivities--;
+		}
+	})
+	console.log(checkedActivities);
+	if(checkedActivities === -7){
+		$("#actRequired").show();
+	}
+	if(!($("#name").val().length > 0)){
+		$("#name").css("border", "1px solid red");
+		nameRequired.show();
+	}
+	if(!($("#mail").val().length > 0)){
+		$("#mail").css("border", "1px solid red");
+		emailRequired.show();
+	}
+	if(!($("#cc-num").val().length > 0)){
+		$("#cc-num").css("border", "1px solid red");
+		ccRequired.show();
+	}
+	if(!($("#zip").val().length > 0)){
+		$("#zip").css("border", "1px solid red");
+		zipRequired.show();
+	}
+	if(!($("#cvv").val().length > 0)){
+		$("#cvv").css("border", "1px solid red");
+		cvvRequired.show();
+	}
+}
+
+$("form button").on("click", function(e){
+	e.preventDefault();
+	console.log("button has been clicked");
+	checkFields();
+})
+
+// function greaterThanZero(e){
+// 	if(e.length > 0){
+// 		return true;
+// 	}
+// 	return false;
+// }
 

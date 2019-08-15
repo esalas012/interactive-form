@@ -130,6 +130,11 @@ option {
 /* ================================= 
   Page Styles
 ==================================== */
+.required{
+	color:red;
+	font-size:12px;
+	font-style: italic;
+}
 
 .container {
 	margin: auto;
