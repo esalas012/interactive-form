@@ -192,7 +192,7 @@ $("#mail").on("input", function(){
 function isCCValid(cc){
 	return /^\d{13}\d?\d?\d?$/.test(cc);
 } 
-$("#cc-num").after('<label id="ccRequired" class="required">Credit card required.</label>');
+$("#cc-num").after('<label id="ccRequired" class="required">Please enter a number that is between 13 and 16 digits long.</label>');
 const ccRequired = $("#ccRequired");
 ccRequired.hide();
 
@@ -226,6 +226,7 @@ $("#cvv").on("input", function(){
 
 function checkFields(){
 	let checkedActivities = 0;
+	let fieldsReady = 0;
 	$(".activities input").each(function(){
 		if($(this).prop("checked")){
 			checkedActivities++;
@@ -234,42 +235,64 @@ function checkFields(){
 			checkedActivities--;
 		}
 	})
-	console.log(checkedActivities);
-	if(checkedActivities === -7){
+	
+	if(!(checkedActivities === -7)){
+		fieldsReady++;
+	}
+	else{
 		$("#actRequired").show();
 	}
-	if(!($("#name").val().length > 0)){
+	if((($("#name").val().length > 0) && (isNameValid($("#name").val())))){
+		fieldsReady++;
+	}
+	else{
 		$("#name").css("border", "1px solid red");
 		nameRequired.show();
 	}
-	if(!($("#mail").val().length > 0)){
+	if(($("#mail").val().length > 0)&&(isEmailValid($("#mail").val()))){
+		fieldsReady++;
+	}
+	else if ($("#mail").val().length === 0){
+		emailRequired.text("Please enter an email").show();
+	}
+	else{
 		$("#mail").css("border", "1px solid red");
-		emailRequired.show();
+		emailRequired.text("Email required. Email must follow the example: lola@example.com").show();
 	}
-	if(!($("#cc-num").val().length > 0)){
+	if(($("#cc-num").val().length > 0) && (isCCValid($("#cc-num").val()))){
+		fieldsReady++;
+	}
+	else if($("#cc-num").val().length === 0){
+			console.log("inside creditCard else if");
+			ccRequired.text("Please enter a credit card number").show();
+		}
+	else{
 		$("#cc-num").css("border", "1px solid red");
-		ccRequired.show();
+		ccRequired.text("Please enter a number that is between 13 and 16 digits long.").show();
 	}
-	if(!($("#zip").val().length > 0)){
+	if(($("#zip").val().length > 0)&& isZipValid($("#zip").val())){
+		fieldsReady++;
+	}
+	else{
 		$("#zip").css("border", "1px solid red");
 		zipRequired.show();
 	}
-	if(!($("#cvv").val().length > 0)){
+	if(($("#cvv").val().length > 0)&& isCvvValid($("#cvv").val())){
+		fieldsReady++;
+	}
+	else{
 		$("#cvv").css("border", "1px solid red");
 		cvvRequired.show();
 	}
+
+	return fieldsReady === 6 ?true:false;
+
 }
 
 $("form button").on("click", function(e){
-	e.preventDefault();
-	console.log("button has been clicked");
-	checkFields();
+	if(!checkFields()){
+		 e.preventDefault();
+	}
 })
 
-// function greaterThanZero(e){
-// 	if(e.length > 0){
-// 		return true;
-// 	}
-// 	return false;
-// }
 
