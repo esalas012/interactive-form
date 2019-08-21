@@ -213,7 +213,6 @@ function fieldRequired(inputId, labelId, val, func){
 //an error message will be displayed.
 function isNameValid(name){
 	if(!(name.match(/^ *$/))){
-		console.log("inside isNameValid");
 		return /^[a-z\s]*$/i.test(name);
 	}
 	return false;
@@ -352,7 +351,6 @@ function checkFields(){
 			fieldsReady++;
 		}
 		else if($("#cc-num").val().length === 0){
-			console.log("inside creditCard else if");
 			ccRequired.text("Please enter a credit card number").show();
 		}
 		else{
